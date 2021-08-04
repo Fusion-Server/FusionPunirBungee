@@ -1,0 +1,6 @@
+# Apenas necessário configurar as punições dos motivos já existentes
+# não adicionar manualmente novas punições.
+# Novas punições devem ser adicionadas diretamente ao banco de dados e,
+# após o reinício do servidor, aparecerão aqui.
+#
+# FusionMC

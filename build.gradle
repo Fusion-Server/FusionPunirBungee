@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+}
+
+group 'br.fusion'
+version '1.0-SNAPSHOT'
+
+jar {
+    compileJava.options.encoding = 'UTF-8'
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    } {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+        exclude "META-INF/*"
+        setDuplicatesStrategy(DuplicatesStrategy.INCLUDE)
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven{
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+}
+
+dependencies {
+    compileOnly("net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT")
+    implementation("commons-dbcp:commons-dbcp:1.4")
+}
