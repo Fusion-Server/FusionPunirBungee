@@ -75,4 +75,17 @@ public class ControladorArquivoPunicoes {
 
         return motivosDisponiveis;
     }
+
+    public static int getPunicaoID(Main plugin, String motivo) throws IOException {
+        Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(plugin.getDataFolder(), "punicoes.yml"));
+        Configuration sessaoIDS = configuration.getSection("Punições").getSection("ID");
+
+        for(String punicao : sessaoIDS.getKeys()){
+            Configuration sessaoPunicao = sessaoIDS.getSection(punicao);
+            if(sessaoPunicao.getString("Motivo").equals(motivo)){
+                return Integer.parseInt(punicao);
+            }
+        }
+        return 0;
+    }
 }

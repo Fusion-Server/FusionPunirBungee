@@ -1,19 +1,16 @@
 package br.fusion.punir.bd;
 
 import br.fusion.punir.modelos.Punicao;
+import br.fusion.punir.modelos.RegistroDePunicao;
+import br.fusion.punir.servicos.RegistrarPunicao;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class BD {
-//    private static final String DRIVER = "com.mysql.jdbc.Driver";
-//    private static final String URL = "jdbc:mysql://localhost:3306/punicoes";
-//    private static final String USUARIO = "root";
-//    private static final String SENHA = "123456a";
-//    private static Connection conexao;
-
 
     private static BasicDataSource ds = new BasicDataSource();
 
@@ -22,40 +19,14 @@ public class BD {
         ds.setUsername("root");
         ds.setPassword("123456a");
         ds.setMinIdle(5);
-        ds.setMaxIdle(10);
-        ds.setMaxOpenPreparedStatements(100);
+        ds.setMaxIdle(20);
+        ds.setMaxOpenPreparedStatements(30);
 
     }
 
     public static Connection getConexao() throws SQLException {
         return ds.getConnection();
     }
-
-//    private static void conectar() {
-//        try{
-//            Class.forName(DRIVER);
-//            conexao = DriverManager.getConnection(URL, USUARIO, SENHA);
-//
-//        } catch (SQLException | ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-//    public static List<String> motivosDisponiveisPorPermissao(int permissao){
-//        List<String> motivosDisponiveis = new ArrayList<>();
-//        try{
-//            PreparedStatement statement = getConexao().prepareStatement("SELECT * FROM punicoes WHERE permissao_necessaria <= ?");
-//            statement.setInt(1, permissao);
-//            ResultSet rs = statement.executeQuery();
-//            while (rs.next()){
-//                motivosDisponiveis.add(rs.getString("nome_punicao"));
-//            }
-//            return motivosDisponiveis;
-//        }catch (SQLException e){
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
 
     public static List<Punicao> getPunicoes(){
         List<Punicao> punicoes = new ArrayList<>();
@@ -76,20 +47,34 @@ public class BD {
         return null;
     }
 
-//    public static int getIDPunicaoPeloNome(String motivo){
-//        try{
-//            PreparedStatement statement = getConexao().prepareStatement("SELECT * FROM punicoes WHERE nome_punicao = ?");
-//            statement.setString(1, motivo);
-//            ResultSet rs = statement.executeQuery();
-//            if(rs.next()){
-//             return rs.getInt("codigo_punicao");
-//            }
-//        }catch (SQLException e){
-//            e.printStackTrace();
-//        }
-//
-//
-//        return 0;
-//    }
+    public static List<RegistroDePunicao> getBanimentosJogador(String idJogador, String servidor){
+        List<RegistroDePunicao> banimentos = new ArrayList<>();
+        try{
+            PreparedStatement statement = getConexao().prepareStatement("SELECT u.uuid, d.data_fim, b.aplicador, b.supervisor_responsavel, p.nome_punicao, b.provas, d.ocorrencia, p.codigo_punicao, b.servidor " +
+                    "FROM usuarios_punidos u " +
+                    "JOIN banimento b " +
+                    "ON u.id_usuario = b.id_usuario " +
+                    "JOIN banimento_detalhes d " +
+                    "ON d.id_banimento = b.id_banimento " +
+                    "JOIN punicoes p " +
+                    "ON b.codigo_punicao= p.codigo_punicao " +
+                    "WHERE u.uuid = ? AND b.servidor = ?");
+            statement.setString(1, idJogador);
+            statement.setString(2, servidor);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                int id = rs.getInt("p.codigo_punicao");
+                String nomePunicao = rs.getString("p.nome_punicao");
+                RegistroDePunicao registroDePunicao = new RegistroDePunicao(id, nomePunicao, UUID.fromString(idJogador), servidor);
+                registroDePunicao.setDataFim(rs.getTimestamp("d.data_fim"));
+                banimentos.add(registroDePunicao);
+            }
+            return banimentos;
+        }catch (SQLException e){
+            System.out.println(e);
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

@@ -11,7 +11,6 @@ import net.md_5.bungee.event.EventHandler;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.UUID;
 
 public class NovaPunicao implements Listener{
 
@@ -22,17 +21,18 @@ public class NovaPunicao implements Listener{
 
     @EventHandler
     public void aoReceberMensagem(PluginMessageEvent e) {
-        if (!e.getTag().equals("fp:punicao")) {
+        if (!e.getTag().equals("fp:registrarpunicao")) {
             return;
         }
         try {
             DataInputStream in = new DataInputStream(new ByteArrayInputStream(e.getData()));
 
+            String servidor = in.readUTF();
             String nomeStaff = in.readUTF();
             String jogadorPunido = in.readUTF();
             String motivo = in.readUTF();
 
-            RegistrarPunicao.registrar(plugin, nomeStaff, jogadorPunido, motivo);
+            RegistrarPunicao.registrar(plugin, servidor, nomeStaff, jogadorPunido, motivo);
 
         } catch (IOException ex) {
             ex.printStackTrace();
