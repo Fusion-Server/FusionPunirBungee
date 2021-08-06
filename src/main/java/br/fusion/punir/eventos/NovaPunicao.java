@@ -15,6 +15,7 @@ import java.io.IOException;
 public class NovaPunicao implements Listener{
 
     private Main plugin;
+
     public NovaPunicao(Main plugin){
         this.plugin = plugin;
     }
