@@ -47,43 +47,6 @@ public class VerificarBanimentoJogador implements Listener {
         });
     }
 
-//    @EventHandler
-//    public void aoReceberMensagemVerificacao(PluginMessageEvent e) {
-//        System.out.println("Recebendo pedido de verificacao1 " + e.getTag());
-//        if (!e.getTag().equals("fp:checarban")) {
-//            return;
-//        }
-//        System.out.println("Recebendo pedido de verificacao2");
-//        plugin.getProxy().getScheduler().runAsync(plugin, new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    Date agora = new Date();
-//                    DataInputStream in = new DataInputStream(new ByteArrayInputStream(e.getData()));
-//
-//                    String servidor = in.readUTF();
-//                    String jogadorPunido = in.readUTF();
-//
-//                    ProxiedPlayer p = plugin.getProxy().getPlayer(jogadorPunido);
-//                    UUID idJogador = p.getUniqueId();
-//
-//                    List<RegistroDePunicao> registros = BD.getBanimentosJogador(idJogador.toString(), servidor);
-//                    if (registros == null || registros.size() == 0) {
-//                        return;
-//                    }
-//                    registros.forEach(registro -> {
-//                        if (registro.getDataFim().after(agora)) {
-//                            notificarJogadorBanido(jogadorPunido, registro.getIDPunicao(), registro.getNomePunicao(), registro.getDataFim(), p.getServer());
-//                            return;
-//                        }
-//                    });
-//
-//                } catch (IOException ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        });
-//    }
 
     private void notificarJogadorBanido(String jogador, int id, String motivo, Date dataFim, Server servidor) {
         try {
