@@ -57,7 +57,7 @@ public class BD {
                     "JOIN banimento_detalhes d " +
                     "ON d.id_banimento = b.id_banimento " +
                     "JOIN punicoes p " +
-                    "ON b.codigo_punicao= p.codigo_punicao " +
+                    "ON b.codigo_punicao = p.codigo_punicao " +
                     "WHERE u.uuid = ? AND b.servidor = ?");
             statement.setString(1, idJogador);
             statement.setString(2, servidor);
@@ -74,7 +74,37 @@ public class BD {
             System.out.println(e);
             e.printStackTrace();
         }
-        return null;
+        return new ArrayList<>();
+    }
+
+    public static List<RegistroDePunicao> getSilenciamentoJogador(String idJogador, String servidor){
+        List<RegistroDePunicao> silenciamentos = new ArrayList<>();
+        try{
+            PreparedStatement statement = getConexao().prepareStatement("SELECT u.uuid, d.data_fim, s.aplicador, s.supervisor_responsavel, p.nome_punicao, s.provas, d.ocorrencia, p.codigo_punicao, s.servidor " +
+                    "FROM usuarios_punidos u " +
+                    "JOIN silenciamento s " +
+                    "ON u.id_usuario = s.id_usuario " +
+                    "JOIN silenciamento_detalhes d " +
+                    "ON d.id_silenciamento = s.id_silenciamento " +
+                    "JOIN punicoes p " +
+                    "ON s.codigo_punicao = p.codigo_punicao " +
+                    "WHERE u.uuid = ? AND s.servidor = ?");
+            statement.setString(1, idJogador);
+            statement.setString(2, servidor);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                int id = rs.getInt("p.codigo_punicao");
+                String nomePunicao = rs.getString("p.nome_punicao");
+                RegistroDePunicao registroDePunicao = new RegistroDePunicao(id, nomePunicao, UUID.fromString(idJogador), servidor);
+                registroDePunicao.setDataFim(rs.getTimestamp("d.data_fim"));
+                silenciamentos.add(registroDePunicao);
+            }
+            return silenciamentos;
+        }catch (SQLException e){
+            System.out.println(e);
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 
 }

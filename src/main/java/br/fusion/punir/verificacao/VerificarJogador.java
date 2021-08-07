@@ -6,23 +6,24 @@ import br.fusion.punir.verificacao.servicos.NotificarSilenciamento;
 import br.fusion.punir.verificacao.servicos.verificacoes.VerificarBanimentoJogador;
 import br.fusion.punir.verificacao.servicos.verificacoes.VerificarSilenciamentoJogador;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.connection.Server;
 
 public class VerificarJogador {
 
 
-    public static void verificarJogador(ProxiedPlayer p) {
+    public static void verificarJogador(ProxiedPlayer p, Server servidor) {
 
         VerificarBanimentoJogador verificarBanimentoJogador = new VerificarBanimentoJogador();
-        RegistroDePunicao registroDePunicao = verificarBanimentoJogador.verificar(p);
+        RegistroDePunicao registroDePunicao = verificarBanimentoJogador.verificar(p, servidor);
         if (registroDePunicao != null) {
             ExpulsarJogadorDoServidor.expulsar(p, registroDePunicao);
             return;
         }
 
         VerificarSilenciamentoJogador verificarSilenciamentoJogador = new VerificarSilenciamentoJogador();
-        registroDePunicao = verificarSilenciamentoJogador.verificar(p);
+        registroDePunicao = verificarSilenciamentoJogador.verificar(p, servidor);
         if (registroDePunicao != null) {
-            NotificarSilenciamento.notificar(p, registroDePunicao);
+            NotificarSilenciamento.notificar(p, registroDePunicao, servidor);
         }
     }
 }
