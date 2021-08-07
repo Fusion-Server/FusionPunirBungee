@@ -55,7 +55,7 @@ public class BD {
         List<RegistroDePunicao> banimentos = new ArrayList<>();
         try{
             Connection conexao = getConexao();
-            PreparedStatement statement = conexao.prepareStatement("SELECT u.uuid, d.data_fim, b.aplicador, b.supervisor_responsavel, p.nome_punicao, b.provas, d.ocorrencia, p.codigo_punicao, b.servidor " +
+            PreparedStatement statement = conexao.prepareStatement("SELECT b.id_banimento, u.uuid, d.data_fim, b.aplicador, b.supervisor_responsavel, p.nome_punicao, b.provas, d.ocorrencia, p.codigo_punicao, b.servidor " +
                     "FROM usuarios_punidos u " +
                     "JOIN banimento b " +
                     "ON u.id_usuario = b.id_usuario " +
@@ -72,6 +72,7 @@ public class BD {
                 String nomePunicao = rs.getString("p.nome_punicao");
                 RegistroDePunicao registroDePunicao = new RegistroDePunicao(id, nomePunicao, UUID.fromString(idJogador), servidor);
                 registroDePunicao.setDataFim(rs.getTimestamp("d.data_fim"));
+                registroDePunicao.setIdUnicoPunicao(rs.getInt("b.id_banimento"));
                 banimentos.add(registroDePunicao);
             }
             statement.close();
@@ -89,7 +90,7 @@ public class BD {
         List<RegistroDePunicao> silenciamentos = new ArrayList<>();
         try{
             Connection conexao = getConexao();
-            PreparedStatement statement = conexao.prepareStatement("SELECT u.uuid, d.data_fim, s.aplicador, s.supervisor_responsavel, p.nome_punicao, s.provas, d.ocorrencia, p.codigo_punicao, s.servidor " +
+            PreparedStatement statement = conexao.prepareStatement("SELECT u.uuid, s.id_silenciamento, d.data_fim, s.aplicador, s.supervisor_responsavel, p.nome_punicao, s.provas, d.ocorrencia, p.codigo_punicao, s.servidor " +
                     "FROM usuarios_punidos u " +
                     "JOIN silenciamento s " +
                     "ON u.id_usuario = s.id_usuario " +
@@ -106,6 +107,7 @@ public class BD {
                 String nomePunicao = rs.getString("p.nome_punicao");
                 RegistroDePunicao registroDePunicao = new RegistroDePunicao(id, nomePunicao, UUID.fromString(idJogador), servidor);
                 registroDePunicao.setDataFim(rs.getTimestamp("d.data_fim"));
+                registroDePunicao.setIdUnicoPunicao(rs.getInt("s.id_silenciamento"));
                 silenciamentos.add(registroDePunicao);
             }
             statement.close();

@@ -6,6 +6,7 @@ import java.util.UUID;
 public class RegistroDePunicao {
 
     private Punicao punicao;
+    private int idUnicoPunicao;
     private UUID idJogador;
     private String aplicador;
     private String supervisorResponsavel;
@@ -75,5 +76,13 @@ public class RegistroDePunicao {
 
     public String getServidor() {
         return servidor;
+    }
+
+    public int getIdUnicoPunicao() {
+        return idUnicoPunicao;
+    }
+
+    public void setIdUnicoPunicao(int idUnicoPunicao) {
+        this.idUnicoPunicao = idUnicoPunicao;
     }
 }

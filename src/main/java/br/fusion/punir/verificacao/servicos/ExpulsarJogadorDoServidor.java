@@ -19,7 +19,7 @@ public class ExpulsarJogadorDoServidor {
         String horaFormatada = horaFormatador.format(registro.getDataFim());
         textComponent.addExtra(ChatColor.RED + "Você foi banido deste servidor até " + dataFormatada + " às " + horaFormatada);
         textComponent.addExtra(ChatColor.RED + "\nMotivo: " + registro.getNomePunicao());
-        textComponent.addExtra(ChatColor.RED + "\nID: #" + registro.getIDPunicao());
+        textComponent.addExtra(ChatColor.RED + "\nID: #" + registro.getIdUnicoPunicao());
         textComponent.addExtra(ChatColor.RED + "\nCompartilhar o ID desta punição poderá afetar seu pedido de revisão.");
         p.disconnect(textComponent);
     }
