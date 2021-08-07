@@ -30,8 +30,8 @@ public class NotificarSilenciamento {
         aviso.subTitle(new TextComponent(ChatColor.GRAY + "Veja detalhes no chat!"));
         aviso.send(p);
         TextComponent mensagem = new TextComponent(ChatColor.RED + "Você foi silenciado até " + registroDePunicao.getDataFim());
-        mensagem.addExtra("\nMotivo: " + registroDePunicao.getNomePunicao());
-        mensagem.addExtra("\nID: "+ registroDePunicao.getNomePunicao());
+        mensagem.addExtra("\n" + ChatColor.RED + "Motivo: " + registroDePunicao.getNomePunicao());
+        mensagem.addExtra("\n" + ChatColor.RED + "ID: #"+ registroDePunicao.getIDPunicao());
         p.sendMessage(mensagem);
 
     }
