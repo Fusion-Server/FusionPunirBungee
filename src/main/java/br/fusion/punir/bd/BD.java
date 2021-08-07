@@ -31,7 +31,8 @@ public class BD {
     public static List<Punicao> getPunicoes(){
         List<Punicao> punicoes = new ArrayList<>();
         try{
-            PreparedStatement statement = getConexao().prepareStatement("SELECT * FROM punicoes");
+            Connection conexao = getConexao();
+            PreparedStatement statement = conexao.prepareStatement("SELECT * FROM punicoes");
             ResultSet rs = statement.executeQuery();
             while (rs.next()){
                 int idPunicao = rs.getInt("codigo_punicao");
@@ -40,6 +41,9 @@ public class BD {
                 Punicao punicao = new Punicao(idPunicao, nomePunicao, permissao);
                 punicoes.add(punicao);
             }
+            statement.close();
+            rs.close();
+            conexao.close();
             return punicoes;
         }catch (SQLException e){
             e.printStackTrace();
@@ -50,7 +54,8 @@ public class BD {
     public static List<RegistroDePunicao> getBanimentosJogador(String idJogador, String servidor){
         List<RegistroDePunicao> banimentos = new ArrayList<>();
         try{
-            PreparedStatement statement = getConexao().prepareStatement("SELECT u.uuid, d.data_fim, b.aplicador, b.supervisor_responsavel, p.nome_punicao, b.provas, d.ocorrencia, p.codigo_punicao, b.servidor " +
+            Connection conexao = getConexao();
+            PreparedStatement statement = conexao.prepareStatement("SELECT u.uuid, d.data_fim, b.aplicador, b.supervisor_responsavel, p.nome_punicao, b.provas, d.ocorrencia, p.codigo_punicao, b.servidor " +
                     "FROM usuarios_punidos u " +
                     "JOIN banimento b " +
                     "ON u.id_usuario = b.id_usuario " +
@@ -69,6 +74,9 @@ public class BD {
                 registroDePunicao.setDataFim(rs.getTimestamp("d.data_fim"));
                 banimentos.add(registroDePunicao);
             }
+            statement.close();
+            rs.close();
+            conexao.close();
             return banimentos;
         }catch (SQLException e){
             System.out.println(e);
@@ -80,7 +88,8 @@ public class BD {
     public static List<RegistroDePunicao> getSilenciamentoJogador(String idJogador, String servidor){
         List<RegistroDePunicao> silenciamentos = new ArrayList<>();
         try{
-            PreparedStatement statement = getConexao().prepareStatement("SELECT u.uuid, d.data_fim, s.aplicador, s.supervisor_responsavel, p.nome_punicao, s.provas, d.ocorrencia, p.codigo_punicao, s.servidor " +
+            Connection conexao = getConexao();
+            PreparedStatement statement = conexao.prepareStatement("SELECT u.uuid, d.data_fim, s.aplicador, s.supervisor_responsavel, p.nome_punicao, s.provas, d.ocorrencia, p.codigo_punicao, s.servidor " +
                     "FROM usuarios_punidos u " +
                     "JOIN silenciamento s " +
                     "ON u.id_usuario = s.id_usuario " +
@@ -99,6 +108,9 @@ public class BD {
                 registroDePunicao.setDataFim(rs.getTimestamp("d.data_fim"));
                 silenciamentos.add(registroDePunicao);
             }
+            statement.close();
+            rs.close();
+            conexao.close();
             return silenciamentos;
         }catch (SQLException e){
             System.out.println(e);
