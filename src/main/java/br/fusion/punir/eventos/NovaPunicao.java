@@ -33,7 +33,7 @@ public class NovaPunicao implements Listener{
             String jogadorPunido = in.readUTF();
             String motivo = in.readUTF();
 
-            RegistrarPunicao.registrar(plugin, servidor, nomeStaff, jogadorPunido, motivo);
+            new RegistrarPunicao().registrar(plugin, servidor, nomeStaff, jogadorPunido, motivo);
 
         } catch (IOException ex) {
             ex.printStackTrace();

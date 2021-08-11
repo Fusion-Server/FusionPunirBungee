@@ -12,7 +12,7 @@ import java.util.UUID;
 public class RegistrarPunicao {
 
 
-    public static void registrar(Main plugin, String servidor, String nomeStaff, String nomeJogadorPunido, String motivo){
+    public void registrar(Main plugin, String servidor, String nomeStaff, String nomeJogadorPunido, String motivo){
         ProxiedPlayer p = plugin.getProxy().getPlayer(nomeStaff);
         UUID idJogadorPunido = p.getUniqueId();
 
@@ -21,6 +21,7 @@ public class RegistrarPunicao {
             public void run() {
                 try {
                     int idPunicao = ControladorArquivoPunicoes.getPunicaoID(plugin, motivo);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
