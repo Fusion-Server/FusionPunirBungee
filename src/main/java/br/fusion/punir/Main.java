@@ -19,6 +19,7 @@ public class Main extends Plugin {
     public void onEnable() {
         getProxy().registerChannel("fp:motivos");
         getProxy().registerChannel("fp:silenciamento");
+        getProxy().registerChannel("fp:registrarpunicao");
         getProxy().getPluginManager().registerListener(this, new JogadorEntrarEmServidor(this));
         getProxy().getPluginManager().registerListener(this, new MensagemMotivos(this));
         getProxy().getPluginManager().registerListener(this, new NovaPunicao(this));

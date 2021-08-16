@@ -19,12 +19,15 @@ import java.util.List;
 
 public class ControladorArquivoPunicoes {
 
+    private static File file;
+
 
     public static void iniciarArquivo(Main plugin) {
         if (!plugin.getDataFolder().exists())
             plugin.getDataFolder().mkdir();
 
-        File file = new File(plugin.getDataFolder(), "punicoes.yml");
+
+        file = new File(plugin.getDataFolder(), "punicoes.yml");
 
 
         if (!file.exists()) {
@@ -35,7 +38,7 @@ public class ControladorArquivoPunicoes {
             }
         }
         try {
-            salvarPunicoes(plugin, BD.getPunicoes());
+            salvarPunicoes(BD.getPunicoes());
         } catch (IOException e) {
             System.out.println("Nao foi possivel salvar as punicoes");
             e.printStackTrace();
@@ -43,8 +46,8 @@ public class ControladorArquivoPunicoes {
     }
 
 
-    public static void salvarPunicoes(Main plugin, List<Punicao> punicoes) throws IOException {
-        Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(plugin.getDataFolder(), "punicoes.yml"));
+    public static void salvarPunicoes(List<Punicao> punicoes) throws IOException {
+        Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
         for (Punicao punicao : punicoes) {
             String path = "Punições." + "ID." + punicao.getID();
             if (configuration.contains(path)) {
@@ -56,13 +59,13 @@ public class ControladorArquivoPunicoes {
             configuration.set(path + ".Ações" + ".1" + ".Tipo", "BANIMENTO");
             configuration.set(path + ".Ações" + ".1" + ".Duração", "0");
         }
-        ConfigurationProvider.getProvider(YamlConfiguration.class).save(configuration, new File(plugin.getDataFolder(), "punicoes.yml"));
+        ConfigurationProvider.getProvider(YamlConfiguration.class).save(configuration, file);
     }
 
-    public static List<String> motivosDisponiveisPorPermissao(Main plugin, int permissao) throws IOException {
+    public static List<String> motivosDisponiveisPorPermissao(int permissao) throws IOException {
         List<String> motivosDisponiveis = new ArrayList<>();
 
-        Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(plugin.getDataFolder(), "punicoes.yml"));
+        Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
         Configuration sessaoIDS = configuration.getSection("Punições").getSection("ID");
 
         for(String punicao : sessaoIDS.getKeys()){
@@ -76,8 +79,8 @@ public class ControladorArquivoPunicoes {
         return motivosDisponiveis;
     }
 
-    public static int getPunicaoID(Main plugin, String motivo) throws IOException {
-        Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(plugin.getDataFolder(), "punicoes.yml"));
+    public static int getPunicaoID(String motivo) throws IOException {
+        Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
         Configuration sessaoIDS = configuration.getSection("Punições").getSection("ID");
 
         for(String punicao : sessaoIDS.getKeys()){
@@ -87,5 +90,11 @@ public class ControladorArquivoPunicoes {
             }
         }
         return 0;
+    }
+
+    public static Configuration getPunicoes() throws IOException {
+        Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
+        Configuration sessaoIDS = configuration.getSection("Punições").getSection("ID");
+        return sessaoIDS;
     }
 }

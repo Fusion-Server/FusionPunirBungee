@@ -11,12 +11,13 @@ import net.md_5.bungee.event.EventHandler;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.UUID;
 
-public class NovaPunicao implements Listener{
+public class NovaPunicao implements Listener {
 
     private Main plugin;
 
-    public NovaPunicao(Main plugin){
+    public NovaPunicao(Main plugin) {
         this.plugin = plugin;
     }
 
@@ -31,9 +32,12 @@ public class NovaPunicao implements Listener{
             String servidor = in.readUTF();
             String nomeStaff = in.readUTF();
             String jogadorPunido = in.readUTF();
+            UUID idJogadorPunido = UUID.fromString(in.readUTF());
             String motivo = in.readUTF();
+            String provas = in.readUTF();
+            int permissao = in.readInt();
 
-            new RegistrarPunicao().registrar(plugin, servidor, nomeStaff, jogadorPunido, motivo);
+            new RegistrarPunicao().registrar(plugin, servidor, nomeStaff, jogadorPunido, idJogadorPunido, motivo, permissao, provas);
 
         } catch (IOException ex) {
             ex.printStackTrace();

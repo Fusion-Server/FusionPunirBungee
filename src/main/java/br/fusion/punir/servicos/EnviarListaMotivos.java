@@ -20,7 +20,7 @@ public class EnviarListaMotivos {
                     DataOutputStream out = new DataOutputStream(bytes);
                     out.writeUTF(nomeStaff);
                     List<String> motivos;
-                    motivos = ControladorArquivoPunicoes.motivosDisponiveisPorPermissao(plugin, permissao);
+                    motivos = ControladorArquivoPunicoes.motivosDisponiveisPorPermissao(permissao);
                     for(String motivo : motivos){
                         out.writeUTF(motivo);
                     }

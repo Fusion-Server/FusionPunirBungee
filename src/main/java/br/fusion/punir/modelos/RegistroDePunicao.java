@@ -8,6 +8,7 @@ public class RegistroDePunicao {
     private Punicao punicao;
     private int idUnicoPunicao;
     private UUID idJogador;
+    private String nomeJogador;
     private String aplicador;
     private String supervisorResponsavel;
     private String provas;
@@ -16,10 +17,11 @@ public class RegistroDePunicao {
     private String servidor;
 
 
-    public RegistroDePunicao(int id, String nomePunicao, UUID idJogador, String servidor) {
+    public RegistroDePunicao(int id, String nomePunicao, UUID idJogador, String nomeJogador, String servidor) {
         this.punicao = new Punicao(id, nomePunicao);
         this.idJogador = idJogador;
         this.servidor = servidor;
+        this.nomeJogador = nomeJogador;
     }
 
     public int getIDPunicao(){
@@ -84,5 +86,9 @@ public class RegistroDePunicao {
 
     public void setIdUnicoPunicao(int idUnicoPunicao) {
         this.idUnicoPunicao = idUnicoPunicao;
+    }
+
+    public String getNomeJogador() {
+        return nomeJogador;
     }
 }

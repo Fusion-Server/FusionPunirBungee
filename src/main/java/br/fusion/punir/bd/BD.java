@@ -28,13 +28,13 @@ public class BD {
         return ds.getConnection();
     }
 
-    public static List<Punicao> getPunicoes(){
+    public static List<Punicao> getPunicoes() {
         List<Punicao> punicoes = new ArrayList<>();
-        try{
+        try {
             Connection conexao = getConexao();
             PreparedStatement statement = conexao.prepareStatement("SELECT * FROM punicoes");
             ResultSet rs = statement.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 int idPunicao = rs.getInt("codigo_punicao");
                 String nomePunicao = rs.getString("nome_punicao");
                 int permissao = rs.getInt("permissao_necessaria");
@@ -45,17 +45,17 @@ public class BD {
             rs.close();
             conexao.close();
             return punicoes;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static List<RegistroDePunicao> getBanimentosJogador(String idJogador, String servidor){
+    public static List<RegistroDePunicao> getBanimentosJogador(String idJogador, String servidor) {
         List<RegistroDePunicao> banimentos = new ArrayList<>();
-        try{
+        try {
             Connection conexao = getConexao();
-            PreparedStatement statement = conexao.prepareStatement("SELECT p.id_punicao, p.data_fim, c.codigo_punicao, c.nome_punicao FROM jogadores j " +
+            PreparedStatement statement = conexao.prepareStatement("SELECT j.nome, p.id_punicao, b.data_fim, c.codigo_punicao, c.nome_punicao FROM jogadores j " +
                     "JOIN jogadores_punicoes p " +
                     "ON j.id_usuario = p.id_usuario " +
                     "JOIN punicoes c " +
@@ -66,11 +66,12 @@ public class BD {
             statement.setString(1, idJogador);
             statement.setString(2, servidor);
             ResultSet rs = statement.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 int id = rs.getInt("c.codigo_punicao");
                 String nomePunicao = rs.getString("c.nome_punicao");
-                RegistroDePunicao registroDePunicao = new RegistroDePunicao(id, nomePunicao, UUID.fromString(idJogador), servidor);
-                registroDePunicao.setDataFim(rs.getTimestamp("p.data_fim"));
+                String nomeJogador = rs.getString("j.nome");
+                RegistroDePunicao registroDePunicao = new RegistroDePunicao(id, nomePunicao, UUID.fromString(idJogador), nomeJogador, servidor);
+                registroDePunicao.setDataFim(rs.getTimestamp("b.data_fim"));
                 registroDePunicao.setIdUnicoPunicao(rs.getInt("p.id_punicao"));
                 banimentos.add(registroDePunicao);
             }
@@ -78,18 +79,18 @@ public class BD {
             rs.close();
             conexao.close();
             return banimentos;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
             e.printStackTrace();
         }
         return new ArrayList<>();
     }
 
-    public static List<RegistroDePunicao> getSilenciamentoJogador(String idJogador, String servidor){
+    public static List<RegistroDePunicao> getSilenciamentoJogador(String idJogador, String servidor) {
         List<RegistroDePunicao> silenciamentos = new ArrayList<>();
-        try{
+        try {
             Connection conexao = getConexao();
-            PreparedStatement statement = conexao.prepareStatement("SELECT p.id_punicao, p.data_fim, c.codigo_punicao, c.nome_punicao FROM jogadores j " +
+            PreparedStatement statement = conexao.prepareStatement("SELECT j.nome, p.id_punicao, s.data_fim, c.codigo_punicao, c.nome_punicao FROM jogadores j " +
                     "JOIN jogadores_punicoes p " +
                     "ON j.id_usuario = p.id_usuario " +
                     "JOIN punicoes c " +
@@ -100,11 +101,12 @@ public class BD {
             statement.setString(1, idJogador);
             statement.setString(2, servidor);
             ResultSet rs = statement.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 int id = rs.getInt("c.codigo_punicao");
                 String nomePunicao = rs.getString("c.nome_punicao");
-                RegistroDePunicao registroDePunicao = new RegistroDePunicao(id, nomePunicao, UUID.fromString(idJogador), servidor);
-                registroDePunicao.setDataFim(rs.getTimestamp("p.data_fim"));
+                String nomeJogador = rs.getString("j.nome");
+                RegistroDePunicao registroDePunicao = new RegistroDePunicao(id, nomePunicao, UUID.fromString(idJogador), nomeJogador, servidor);
+                registroDePunicao.setDataFim(rs.getTimestamp("s.data_fim"));
                 registroDePunicao.setIdUnicoPunicao(rs.getInt("p.id_punicao"));
                 silenciamentos.add(registroDePunicao);
             }
@@ -112,11 +114,137 @@ public class BD {
             rs.close();
             conexao.close();
             return silenciamentos;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
             e.printStackTrace();
         }
         return new ArrayList<>();
+    }
+
+
+    public static int getOcorrenciasPunicaoJogador(int idPunicao, UUID idJogador) {
+        try {
+            Connection conexao = getConexao();
+            PreparedStatement statement = conexao.prepareStatement("SELECT p.ocorrencias FROM jogadores j " +
+                    "JOIN jogadores_punicoes p " +
+                    "ON j.id_usuario = p.id_usuario " +
+                    "WHERE j.uuid = ? AND p.codigo_punicao = ?");
+            statement.setString(1, idJogador.toString());
+            statement.setInt(2, idPunicao);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("p.ocorrencias");
+            }
+
+
+            statement.close();
+            rs.close();
+            conexao.close();
+            return 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static void adicionarBanimento(RegistroDePunicao registro, int ocorrencias) {
+        try {
+            Connection conexao = getConexao();
+            int idUnico = getIDUnicoPunicao(conexao, registro);
+            PreparedStatement statement = conexao.prepareStatement("INSERT INTO banimentos VALUES (?, ?, ?, ?, ?, ?, ?)");
+            statement.setInt(1, idUnico);
+            statement.setString(2, registro.getAplicador());
+            statement.setString(3, registro.getSupervisorResponsavel());
+            statement.setDate(4, new Date(registro.getData().getTime()));
+            statement.setDate(5, new Date(registro.getDataFim().getTime()));
+            statement.setString(6, registro.getProvas());
+            statement.setInt(7, ocorrencias);
+            statement.executeUpdate();
+            statement.close();
+            adicionarOcorrencia(conexao, idUnico);
+            conexao.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private static void adicionarOcorrencia(Connection conexao, int idUnico){
+        try{
+            PreparedStatement statement = conexao.prepareStatement("UPDATE jogadores_punicoes SET ocorrencias = ocorrencias + 1 WHERE id_punicao = ?");
+            statement.setInt(1, idUnico);
+            statement.executeUpdate();
+            statement.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    private static int getIDUnicoPunicao(Connection conexao, RegistroDePunicao registro) {
+        try {
+            int id = getIDJogador(conexao, registro.getIdJogador(), registro.getNomeJogador());
+            PreparedStatement statement = conexao.prepareStatement("SELECT id_punicao FROM jogadores_punicoes "+
+                    "WHERE id_usuario = ? AND codigo_punicao = ? AND servidor = ?");
+            statement.setInt(1, id);
+            statement.setInt(2, registro.getIDPunicao());
+            statement.setString(3, registro.getServidor());
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id_punicao");
+            }
+            rs.close();
+            statement.close();
+            statement = conexao.prepareStatement("INSERT INTO jogadores_punicoes VALUES (?, default, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            statement.setInt(1, id);
+            statement.setString(2, registro.getServidor());
+            statement.setInt(3, 0);
+            statement.setInt(4, registro.getIDPunicao());
+            System.out.println("Id da punicao " + registro.getIDPunicao());
+            statement.executeUpdate();
+            rs = statement.getGeneratedKeys();
+            if(rs.next()){
+                return rs.getInt(1);
+            }
+            statement.close();
+            rs.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
+
+    }
+    private static int getIDJogador(Connection conexao, UUID idJogador, String nomeJogador){
+        try{
+            PreparedStatement statement = conexao.prepareStatement("SELECT id_usuario FROM jogadores "+
+                    "WHERE uuid = ?");
+            statement.setString(1, idJogador.toString());
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                int id = rs.getInt(1);
+                System.out.println("Retornando o id if1 " + id);
+                return rs.getInt("id_usuario");
+            }
+            rs.close();
+            statement.close();
+            statement = conexao.prepareStatement("INSERT INTO jogadores VALUES (default, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, nomeJogador);
+            statement.setString(2, idJogador.toString());
+            statement.executeUpdate();
+            rs = statement.getGeneratedKeys();
+            if(rs.next()){
+                int id = rs.getInt(1);
+                System.out.println("Retornando o id if2" + id);
+                return id;
+            }
+            statement.close();
+            rs.close();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 }
