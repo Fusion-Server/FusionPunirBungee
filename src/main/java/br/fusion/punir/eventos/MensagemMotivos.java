@@ -21,6 +21,7 @@ public class MensagemMotivos implements Listener {
 
     @EventHandler
     public void aoReceberMensagem(PluginMessageEvent e) {
+        System.out.println("Recebendo mensagem via: " + e.getTag());
         if (!e.getTag().equals("fp:motivos")) {
             return;
         }
@@ -31,7 +32,7 @@ public class MensagemMotivos implements Listener {
             int permissao = in.readInt();
 
             ProxiedPlayer p = plugin.getProxy().getPlayer(nomeStaff);
-            EnviarListaMotivos.enviar(nomeStaff, permissao, p.getServer(), plugin);
+            new EnviarListaMotivos().enviar(nomeStaff, permissao, p.getServer(), plugin);
         } catch (IOException ex) {
             ex.printStackTrace();
         }

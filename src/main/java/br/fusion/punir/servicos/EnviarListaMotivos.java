@@ -11,7 +11,7 @@ import java.util.List;
 public class EnviarListaMotivos {
 
 
-    public static void enviar(String nomeStaff, int permissao, Server servidor, Main plugin){
+    public void enviar(String nomeStaff, int permissao, Server servidor, Main plugin){
         plugin.getProxy().getScheduler().runAsync(plugin, new Runnable() {
             @Override
             public void run() {
@@ -25,6 +25,7 @@ public class EnviarListaMotivos {
                         out.writeUTF(motivo);
                     }
 
+                    System.out.println("Enviando dados via fp:motivos!");
                     servidor.sendData("fp:motivos", bytes.toByteArray());
                 }catch (IOException e){
                     e.printStackTrace();

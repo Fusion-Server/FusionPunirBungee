@@ -17,7 +17,7 @@ public class ExpulsarJogadorDoServidor {
         SimpleDateFormat horaFormatador = new SimpleDateFormat("HH:mm:ss");
         String dataFormatada = dataFormatador.format(registro.getDataFim());
         String horaFormatada = horaFormatador.format(registro.getDataFim());
-        textComponent.addExtra(ChatColor.RED + "FusionMC");
+        textComponent.addExtra(ChatColor.RED + "" + ChatColor.BOLD + "FusionMC");
         textComponent.addExtra(ChatColor.RED + "\nVocê foi banido deste servidor até " + dataFormatada + " às " + horaFormatada);
         textComponent.addExtra(ChatColor.RED + "\nMotivo: " + registro.getNomePunicao());
         textComponent.addExtra(ChatColor.RED + "\nID: #" + registro.getIdUnicoPunicao());

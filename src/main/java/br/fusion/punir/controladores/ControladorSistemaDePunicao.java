@@ -3,6 +3,7 @@ package br.fusion.punir.controladores;
 import br.fusion.punir.bd.BD;
 import br.fusion.punir.modelos.RegistroDePunicao;
 import br.fusion.punir.verificacao.servicos.ExpulsarJogadorDoServidor;
+import br.fusion.punir.verificacao.servicos.NotificarSilenciamento;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
@@ -26,14 +27,17 @@ public class ControladorSistemaDePunicao {
         Configuration proximaAcao = getProximaAcao(sessaoAcoes, ocorrencias);
         Date dataFim = getDataFim(proximaAcao);
         registro.setDataFim(dataFim);
+        ProxiedPlayer p = ProxyServer.getInstance().getPlayer(registro.getIdJogador());
         if (proximaAcao.get("Tipo").equals("BANIMENTO")) {
             BD.adicionarBanimento(registro, ocorrencias + 1);
-            ProxiedPlayer p = ProxyServer.getInstance().getPlayer(registro.getIdJogador());
             if (p.isConnected()) {
                 ExpulsarJogadorDoServidor.expulsar(p, registro);
             }
 
         } else if (proximaAcao.get("Tipo").equals("SILENCIAMENTO")) {
+            if (p.isConnected()) {
+                NotificarSilenciamento.notificar(p, registro, p.getServer());
+            }
 
         }
 
