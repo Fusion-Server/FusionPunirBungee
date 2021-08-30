@@ -15,8 +15,8 @@ public class BD {
 
     static {
         ds.setUrl("jdbc:mysql://158.69.23.151:3306/punicoes");
-        ds.setUsername("root");
-        ds.setPassword("123456a");
+        ds.setUsername("u7_TWJkLCUfq2");
+        ds.setPassword("tluToIbv@On5c4uG.wmaUUQn");
         ds.setMinIdle(5);
         ds.setMaxIdle(20);
         ds.setMaxOpenPreparedStatements(30);
