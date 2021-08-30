@@ -29,7 +29,6 @@ public class RegistrarPunicao {
                     new ControladorSistemaDePunicao().executarPunicao(registro);
                     return;
                 }
-                //Enviar pro discord
 //                    Enviar pro discord
 //                    RegistroDePunicao registroDePunicao = new RegistroDePunicao(idPunicao, motivo, idJogadorPunido, nomeJogadorPunido);
 

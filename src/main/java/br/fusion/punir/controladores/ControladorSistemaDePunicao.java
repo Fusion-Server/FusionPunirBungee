@@ -30,12 +30,13 @@ public class ControladorSistemaDePunicao {
         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(registro.getIdJogador());
         if (proximaAcao.get("Tipo").equals("BANIMENTO")) {
             BD.adicionarBanimento(registro, ocorrencias + 1);
-            if (p.isConnected()) {
+            if (p != null && p.isConnected()) {
                 ExpulsarJogadorDoServidor.expulsar(p, registro);
             }
 
         } else if (proximaAcao.get("Tipo").equals("SILENCIAMENTO")) {
-            if (p.isConnected()) {
+            BD.adicionarSilenciamento(registro, ocorrencias + 1);
+            if (p != null && p.isConnected()) {
                 NotificarSilenciamento.notificar(p, registro, p.getServer());
             }
 

@@ -2,7 +2,6 @@ package br.fusion.punir.bd;
 
 import br.fusion.punir.modelos.Punicao;
 import br.fusion.punir.modelos.RegistroDePunicao;
-import br.fusion.punir.servicos.RegistrarPunicao;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import java.sql.*;
@@ -15,7 +14,7 @@ public class BD {
     private static BasicDataSource ds = new BasicDataSource();
 
     static {
-        ds.setUrl("jdbc:mysql://localhost:3306/punicoes");
+        ds.setUrl("jdbc:mysql://158.69.23.151:3306/punicoes");
         ds.setUsername("root");
         ds.setPassword("123456a");
         ds.setMinIdle(5);
@@ -163,6 +162,30 @@ public class BD {
             statement.executeUpdate();
             statement.close();
             adicionarOcorrencia(conexao, idUnico);
+            statement.close();
+            conexao.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void adicionarSilenciamento(RegistroDePunicao registro, int ocorrencias) {
+        try {
+            Connection conexao = getConexao();
+            int idUnico = getIDUnicoPunicao(conexao, registro);
+            PreparedStatement statement = conexao.prepareStatement("INSERT INTO silenciamentos VALUES (?, ?, ?, ?, ?, ?, ?)");
+            statement.setInt(1, idUnico);
+            statement.setString(2, registro.getAplicador());
+            statement.setString(3, registro.getSupervisorResponsavel());
+            statement.setDate(4, new Date(registro.getData().getTime()));
+            statement.setDate(5, new Date(registro.getDataFim().getTime()));
+            statement.setString(6, registro.getProvas());
+            statement.setInt(7, ocorrencias);
+            statement.executeUpdate();
+            statement.close();
+            adicionarOcorrencia(conexao, idUnico);
+            statement.close();
             conexao.close();
         } catch (SQLException e) {
             e.printStackTrace();
