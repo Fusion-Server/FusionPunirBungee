@@ -14,7 +14,7 @@ public class BD {
     private static BasicDataSource ds = new BasicDataSource();
 
     static {
-        ds.setUrl("jdbc:mysql://158.69.23.151:3306/punicoes");
+        ds.setUrl("jdbc:mysql://158.69.23.151:3306/s7_punicoes");
         ds.setUsername("u7_TWJkLCUfq2");
         ds.setPassword("tluToIbv@On5c4uG.wmaUUQn");
         ds.setMinIdle(5);
