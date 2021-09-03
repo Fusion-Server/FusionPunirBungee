@@ -2,6 +2,7 @@ package br.fusion.punir.controladores;
 
 import br.fusion.punir.bd.BD;
 import br.fusion.punir.modelos.RegistroDePunicao;
+import br.fusion.punir.servicos.EnviarPunicaoDiscord;
 import br.fusion.punir.verificacao.servicos.ExpulsarJogadorDoServidor;
 import br.fusion.punir.verificacao.servicos.NotificarSilenciamento;
 import net.md_5.bungee.api.ProxyServer;
@@ -39,13 +40,10 @@ public class ControladorSistemaDePunicao {
             if (p != null && p.isConnected()) {
                 NotificarSilenciamento.notificar(p, registro, p.getServer());
             }
-
         }
 
-
-//        System.out.println("Contem? " + sessaoAcoes.contains(String.valueOf(ocorrencias + 1)));
-//        String tipo = novaAcao.getString("Tipo");
-//        System.out.println("Tipo da nova acao: " + tipo);
+        new EnviarPunicaoDiscord().enviarPunicao(registro, ocorrencias+1);
+        //enviar para o discord
 
     }
 
