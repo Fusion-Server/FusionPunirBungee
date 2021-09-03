@@ -20,7 +20,7 @@ public class RegistrarPunicao {
         plugin.getProxy().getScheduler().runAsync(plugin, () -> {
             try {
                 int idPunicao = ControladorArquivoPunicoes.getPunicaoID(motivo);
-                if(permissao >= 3){
+                if(permissao >= 1){
                     RegistroDePunicao registro = new RegistroDePunicao(idPunicao, motivo, idJogadorPunido, nomeJogadorPunido, servidor);
                     registro.setAplicador(nomeStaff);
                     registro.setSupervisorResponsavel(nomeStaff);
