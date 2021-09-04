@@ -23,6 +23,7 @@ public class EnviarPunicaoDiscord {
             out.writeUTF(dataFim);
             out.writeUTF(registro.getServidor());
             out.writeUTF(registro.getAplicador());
+            out.writeUTF(registro.getProvas());
             out.writeInt(ocorrencias);
 
             out.close();
