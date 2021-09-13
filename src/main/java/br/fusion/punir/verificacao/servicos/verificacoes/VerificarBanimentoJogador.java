@@ -18,7 +18,7 @@ public class VerificarBanimentoJogador implements Listener, VerificarPunicaoJoga
         Date agora = new Date();
         UUID idJogador = jogador.getUniqueId();
 
-        List<RegistroDePunicao> registros = BD.getBanimentosJogador(idJogador.toString(), servidor.getInfo().getName());
+        List<RegistroDePunicao> registros = new BD().getBanimentosJogador(idJogador.toString(), servidor.getInfo().getName());
         if (registros == null || registros.size() == 0) {
             return null;
         }
