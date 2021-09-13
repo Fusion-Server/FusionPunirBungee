@@ -16,7 +16,7 @@ public class VerificarSilenciamentoJogador implements VerificarPunicaoJogador {
         Date agora = new Date();
         UUID idJogador = jogador.getUniqueId();
 
-        List<RegistroDePunicao> registros = BD.getSilenciamentoJogador(idJogador.toString(), servidor.getInfo().getName());
+        List<RegistroDePunicao> registros = new BD().getSilenciamentoJogador(idJogador.toString(), servidor.getInfo().getName());
         if (registros == null || registros.size() == 0) {
             return null;
         }
