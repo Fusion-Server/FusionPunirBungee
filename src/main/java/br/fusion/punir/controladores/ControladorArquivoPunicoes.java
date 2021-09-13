@@ -38,8 +38,8 @@ public class ControladorArquivoPunicoes {
             }
         }
         try {
-            salvarPunicoes(BD.getPunicoes());
-        } catch (IOException e) {
+            salvarPunicoes(new BD().getPunicoes());
+        } catch (IOException | SQLException e) {
             System.out.println("Nao foi possivel salvar as punicoes");
             e.printStackTrace();
         }

@@ -11,9 +11,9 @@ import java.util.UUID;
 
 public class BD {
 
-    private static BasicDataSource ds = new BasicDataSource();
+    private BasicDataSource ds = new BasicDataSource();
 
-    static {
+    public BD() {
         ds.setUrl("jdbc:mysql://158.69.23.151:3306/s7_punicoes");
         ds.setUsername("u7_TWJkLCUfq2");
         ds.setPassword("dVr!8rwMq=zYDdq9glks08+A");
@@ -23,11 +23,11 @@ public class BD {
 
     }
 
-    public static Connection getConexao() throws SQLException {
+    public Connection getConexao() throws SQLException {
         return ds.getConnection();
     }
 
-    public static List<Punicao> getPunicoes() {
+    public List<Punicao> getPunicoes() throws SQLException {
         List<Punicao> punicoes = new ArrayList<>();
         try {
             Connection conexao = getConexao();
@@ -50,7 +50,7 @@ public class BD {
         return null;
     }
 
-    public static List<RegistroDePunicao> getBanimentosJogador(String idJogador, String servidor) {
+    public List<RegistroDePunicao> getBanimentosJogador(String idJogador, String servidor) {
         List<RegistroDePunicao> banimentos = new ArrayList<>();
         try {
             Connection conexao = getConexao();
@@ -85,7 +85,7 @@ public class BD {
         return new ArrayList<>();
     }
 
-    public static List<RegistroDePunicao> getSilenciamentoJogador(String idJogador, String servidor) {
+    public List<RegistroDePunicao> getSilenciamentoJogador(String idJogador, String servidor) {
         List<RegistroDePunicao> silenciamentos = new ArrayList<>();
         try {
             Connection conexao = getConexao();
@@ -121,7 +121,7 @@ public class BD {
     }
 
 
-    public static int getOcorrenciasPunicaoJogador(int idPunicao, UUID idJogador) {
+    public int getOcorrenciasPunicaoJogador(int idPunicao, UUID idJogador) {
         try {
             Connection conexao = getConexao();
             PreparedStatement statement = conexao.prepareStatement("SELECT p.ocorrencias FROM jogadores j " +
@@ -147,7 +147,7 @@ public class BD {
         return 0;
     }
 
-    public static void adicionarBanimento(RegistroDePunicao registro, int ocorrencias) {
+    public void adicionarBanimento(RegistroDePunicao registro, int ocorrencias) {
         try {
             Connection conexao = getConexao();
             int idUnico = getIDUnicoPunicao(conexao, registro);
@@ -170,7 +170,7 @@ public class BD {
 
     }
 
-    public static void adicionarSilenciamento(RegistroDePunicao registro, int ocorrencias) {
+    public void adicionarSilenciamento(RegistroDePunicao registro, int ocorrencias) {
         try {
             Connection conexao = getConexao();
             int idUnico = getIDUnicoPunicao(conexao, registro);
@@ -193,22 +193,22 @@ public class BD {
 
     }
 
-    private static void adicionarOcorrencia(Connection conexao, int idUnico){
-        try{
+    private void adicionarOcorrencia(Connection conexao, int idUnico) {
+        try {
             PreparedStatement statement = conexao.prepareStatement("UPDATE jogadores_punicoes SET ocorrencias = ocorrencias + 1 WHERE id_punicao = ?");
             statement.setInt(1, idUnico);
             statement.executeUpdate();
             statement.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
 
-    private static int getIDUnicoPunicao(Connection conexao, RegistroDePunicao registro) {
+    private int getIDUnicoPunicao(Connection conexao, RegistroDePunicao registro) {
         try {
             int id = getIDJogador(conexao, registro.getIdJogador(), registro.getNomeJogador());
-            PreparedStatement statement = conexao.prepareStatement("SELECT id_punicao FROM jogadores_punicoes "+
+            PreparedStatement statement = conexao.prepareStatement("SELECT id_punicao FROM jogadores_punicoes " +
                     "WHERE id_usuario = ? AND codigo_punicao = ? AND servidor = ?");
             statement.setInt(1, id);
             statement.setInt(2, registro.getIDPunicao());
@@ -227,20 +227,21 @@ public class BD {
             System.out.println("Id da punicao " + registro.getIDPunicao());
             statement.executeUpdate();
             rs = statement.getGeneratedKeys();
-            if(rs.next()){
+            if (rs.next()) {
                 return rs.getInt(1);
             }
             statement.close();
             rs.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;
 
     }
-    private static int getIDJogador(Connection conexao, UUID idJogador, String nomeJogador){
-        try{
-            PreparedStatement statement = conexao.prepareStatement("SELECT id_usuario FROM jogadores "+
+
+    private int getIDJogador(Connection conexao, UUID idJogador, String nomeJogador) {
+        try {
+            PreparedStatement statement = conexao.prepareStatement("SELECT id_usuario FROM jogadores " +
                     "WHERE uuid = ?");
             statement.setString(1, idJogador.toString());
             ResultSet rs = statement.executeQuery();
@@ -256,7 +257,7 @@ public class BD {
             statement.setString(2, idJogador.toString());
             statement.executeUpdate();
             rs = statement.getGeneratedKeys();
-            if(rs.next()){
+            if (rs.next()) {
                 int id = rs.getInt(1);
                 System.out.println("Retornando o id if2" + id);
                 return id;
@@ -264,7 +265,7 @@ public class BD {
             statement.close();
             rs.close();
 
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;

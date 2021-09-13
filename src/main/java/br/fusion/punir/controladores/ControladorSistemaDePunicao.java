@@ -20,8 +20,9 @@ public class ControladorSistemaDePunicao {
 
 
     public void executarPunicao(RegistroDePunicao registro) throws IOException {
+        BD bd = new BD();
 
-        int ocorrencias = BD.getOcorrenciasPunicaoJogador(registro.getIDPunicao(), registro.getIdJogador());
+        int ocorrencias = bd.getOcorrenciasPunicaoJogador(registro.getIDPunicao(), registro.getIdJogador());
         Configuration punicoes = ControladorArquivoPunicoes.getPunicoes();
         Configuration sessaoAcoes = punicoes.getSection(String.valueOf(registro.getIDPunicao())).getSection("Ações");
 
@@ -30,13 +31,13 @@ public class ControladorSistemaDePunicao {
         registro.setDataFim(dataFim);
         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(registro.getIdJogador());
         if (proximaAcao.get("Tipo").equals("BANIMENTO")) {
-            BD.adicionarBanimento(registro, ocorrencias + 1);
+            bd.adicionarBanimento(registro, ocorrencias + 1);
             if (p != null && p.isConnected()) {
                 ExpulsarJogadorDoServidor.expulsar(p, registro);
             }
 
         } else if (proximaAcao.get("Tipo").equals("SILENCIAMENTO")) {
-            BD.adicionarSilenciamento(registro, ocorrencias + 1);
+            bd.adicionarSilenciamento(registro, ocorrencias + 1);
             if (p != null && p.isConnected()) {
                 NotificarSilenciamento.notificar(p, registro, p.getServer());
             }
