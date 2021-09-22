@@ -21,7 +21,6 @@ public class MensagemMotivos implements Listener {
 
     @EventHandler
     public void aoReceberMensagem(PluginMessageEvent e) {
-        System.out.println("Recebendo mensagem via: " + e.getTag());
         if (!e.getTag().equals("fp:motivos")) {
             return;
         }
