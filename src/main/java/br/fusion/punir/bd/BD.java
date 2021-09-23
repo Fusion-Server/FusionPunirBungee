@@ -155,8 +155,8 @@ public class BD {
             statement.setInt(1, idUnico);
             statement.setString(2, registro.getAplicador());
             statement.setString(3, registro.getSupervisorResponsavel());
-            statement.setDate(4, new Date(registro.getData().getTime()));
-            statement.setDate(5, new Date(registro.getDataFim().getTime()));
+            statement.setTimestamp(4, new Timestamp(registro.getData().getTime()));
+            statement.setTimestamp(5, new Timestamp(registro.getDataFim().getTime()));
             statement.setString(6, registro.getProvas());
             statement.setInt(7, ocorrencias);
             statement.executeUpdate();
@@ -178,8 +178,8 @@ public class BD {
             statement.setInt(1, idUnico);
             statement.setString(2, registro.getAplicador());
             statement.setString(3, registro.getSupervisorResponsavel());
-            statement.setDate(4, new Date(registro.getData().getTime()));
-            statement.setDate(5, new Date(registro.getDataFim().getTime()));
+            statement.setTimestamp(4, new Timestamp(registro.getData().getTime()));
+            statement.setTimestamp(5, new Timestamp(registro.getDataFim().getTime()));
             statement.setString(6, registro.getProvas());
             statement.setInt(7, ocorrencias);
             statement.executeUpdate();
